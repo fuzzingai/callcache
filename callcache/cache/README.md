@@ -1,0 +1,1 @@
+we are going to have two types of caches right now: memcache and filecache. one just stores stuff in memory, and the other one will throw things into files
