@@ -4,7 +4,7 @@ simple usage:
 import sys
 from callcache.tracefilters import FunctionNameFilter, FileFilter
 from callcache.cache.mem import MemCache
-from callcache.callhooks import call_and_return_tracer
+from callcache.callhooks import tracer
 # create a filter function
 f = FunctionNameFilter(include=["one", "three"], exclude=["two"])
 
@@ -24,8 +24,7 @@ def three():
     print("hi")
     return "beans"
 
-# 
-sys.settrace(call_and_return_tracer(mc, f))
+sys.settrace(tracer(mc, f))
 one(1,2)
 two(1,2,3)
 one(5, 9)
@@ -37,7 +36,7 @@ sys.settrace(None)
 now you can inspect the historical call/return values to each of the functions
 
 ```python
-In [6]: pprint.pprint(mc.get_pretty())
+In [6]: import pprint; pprint.pprint(mc.cache)
 {('<ipython-input-1-bdeb3841d0ae>', 'one'): [Call(filepath=<ipython-input-1-bdeb3841d0ae>, function=one, args={'a': 1, 'b': 2}),
                                              Return(filepath=<ipython-input-1-bdeb3841d0ae>, function=one, retval=2),
                                              Call(filepath=<ipython-input-1-bdeb3841d0ae>, function=one, args={'a': 5, 'b': 9}),

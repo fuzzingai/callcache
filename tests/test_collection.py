@@ -1,5 +1,5 @@
 # from sys import settrace
-# from callcache.callhooks import call_and_return_tracer, set_watch_files
+# from callcache.callhooks import tracer, set_watch_files
 # from callcache.cache.file import list_args_for_func
 
 
@@ -13,7 +13,7 @@
 #         return 5
 
 #     set_watch_files([__file__])
-#     settrace(call_and_return_tracer)
+#     settrace(tracer)
 #     foo(spam, "universe")
 
 #     spam("one")

@@ -2,6 +2,7 @@ import inspect
 from .funcutils import get_function_id
 from types import FrameType
 import logging
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -10,7 +11,7 @@ class BaseType:
 
     @property
     def id(self):
-        return get_function_id(self.frame.f_code.co_filename, self.frame.f_code.co_name)
+        return (self.frame.f_code.co_filename, self.frame.f_code.co_name)
     
     @property 
     def filepath(self):
@@ -19,7 +20,6 @@ class BaseType:
     @property
     def function_name(self):
         return self.frame.f_code.co_name
-
 
 class Return(BaseType):
     def __init__(self, frame, retval):
