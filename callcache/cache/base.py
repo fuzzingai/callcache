@@ -3,11 +3,9 @@ from ..calltypes import BaseType
 from typing import Dict
 
 class BaseCache:
-    # this value is a mapping between a function id given by the get_function_id function and a tuple of the file name and function name
-    _cache: Dict[tuple, Dict]
-
     def __init__(self):
-        self._cache = {}
+        # this value is a mapping between a function id given by the get_function_id function and a tuple of the file name and function name
+        self._cache: Dict[tuple, Dict] = {}
 
     @abstractmethod
     def cache(self):

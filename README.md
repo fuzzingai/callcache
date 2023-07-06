@@ -4,7 +4,7 @@ simple usage:
 import sys
 from callcache.tracefilters import FunctionNameFilter, FileFilter
 from callcache.cache.mem import MemCache
-from callcache.callhooks import tracer
+from callcache.callhooks import stracer
 # create a filter function
 f = FunctionNameFilter(include=["one", "three"], exclude=["two"])
 
@@ -24,7 +24,7 @@ def three():
     print("hi")
     return "beans"
 
-sys.settrace(tracer(mc, f))
+sys.settrace(stracer(mc, f))
 one(1,2)
 two(1,2,3)
 one(5, 9)

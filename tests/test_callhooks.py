@@ -3,6 +3,7 @@ from callcache.callhooks import tracer, stracer
 from callcache.calltypes import Call, Return
 from callcache.tracefilters import FileFilter, FunctionNameFilter
 import sys, logging, pprint
+from IPython import embed
 
 def test_settrace_handler(caplog):
     mc = MemCache()
@@ -125,13 +126,16 @@ def test_settrace_handler4():
     def one(a, b):
         c = a * b
         frame = sys._getframe(0)
-        stuff.append((Call(frame=frame), Return(frame=frame, retval=c)))
+        stuff.append({
+            'call': Call(frame=frame), 
+            'return': Return(frame=frame, retval=c)})
         return c
 
     def two(x, y, z):
         memo = x + 2 * y * z
         frame = sys._getframe(0)
-        stuff.append((Call(frame=frame), Return(frame=frame, retval=memo)))
+        stuff.append({
+            'call': Call(frame=frame), 'return': Return(frame=frame, retval=memo)})
         return memo
 
     sys.settrace(stracer(mc, f))
@@ -139,4 +143,4 @@ def test_settrace_handler4():
     two(1,2,3)
     sys.settrace(None)    
 
-    assert mc.get_cache_for_func(stuff[1][0].id) == [stuff[1]]
+    assert mc.get_cache_for_func(stuff[1]['call'].id) == [stuff[1]]

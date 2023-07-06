@@ -13,7 +13,7 @@ def get_unique_id():
 
 def stracer(cache, filters: Filter):
     '''
-    This is the version of the tracer that will use the ssave function of the cache
+    This is the version of the tracer that will use the buffered_call_return_save function of the cache
     You probably want to use this
     '''
 
@@ -22,7 +22,7 @@ def stracer(cache, filters: Filter):
             if event == 'return':
                 e = Return(frame=frame, retval=arg)
                 logger.info(f"Returning from {e}")
-                cache.ssave(call_id, e)
+                cache.buffered_call_return_save(call_id, e)
 
         return r
 
@@ -36,7 +36,7 @@ def stracer(cache, filters: Filter):
             # for this new frame, only trace exceptions and returns
             logger.info(f"Entering {e}")
             frame.f_trace_lines = False
-            cache.ssave(call_id, e)
+            cache.buffered_call_return_save(call_id, e)
             return handle_return(call_id) 
 
     return handle_call 

@@ -6,6 +6,28 @@ import traceback
 
 logger = logging.getLogger(__name__)
 
+
+from types import CodeType, FrameType
+class SerializedFrame():
+    def __init__(self, co_filename, co_name):
+        self.f_code = CodeType(0, 0, 0, 0, 0, 0, b'', (), (), (), co_filename, co_name, 0, b'', (), ())
+
+
+def _serialize_frame(frame: FrameType):
+    '''
+    By default, frame objects arent serializable, so we are going to attempt to create a new frame object that is serializable, and has the same accessors
+    as the real frame object
+
+    Args:
+        frame (FrameType): the frame object to serialize
+
+    Returns:
+        SerializedFrame: a new frame object that is serializable
+    '''
+
+    # we need to create a new frame object that is serializable
+    return SerializedFrame(frame.f_code.co_filename, frame.f_code.co_name) 
+
 class BaseType:
     frame: FrameType
 
@@ -33,6 +55,12 @@ class Return(BaseType):
     # we mostly need to overwrite this method for testing purposes
     def __eq__(self, other):
         return self.retval == other.retval and self.frame == other.frame
+    
+    def __getstate__(self):
+        return self.retval, _serialize_frame(self.frame)
+    
+    def __setstate__(self, state):
+        self.retval, self.frame = state
 
 class Call(BaseType):
     def __init__(self, frame):
@@ -53,3 +81,9 @@ class Call(BaseType):
     # we mostly need to overwrite this method for testing purposes
     def __eq__(self, other):
         return self.args == other.args and self.frame == other.frame
+    
+    def __getstate__(self):
+        return self.args, _serialize_frame(self.frame)
+    
+    def __setstate__(self, state):
+        self.args, self.frame = state
